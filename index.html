@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Отправка в Telegram</title>
+<style>
+body { margin:0; height:100vh; display:flex; justify-content:center; align-items:center; background:#222; font-family:Arial,sans-serif; }
+.center { display:flex; flex-direction:column; gap:15px; align-items:center; }
+input { padding:12px; font-size:16px; border-radius:5px; border:1px solid #555; outline:none; width:250px; }
+input::placeholder { color:#aaa; font-size:16px; }
+button { padding:12px 25px; font-size:16px; border:none; border-radius:5px; background:#2db4b4; color:#fff; cursor:pointer; transition:0.3s; }
+button:hover { background:#1a8a8a; }
+.status { color:#fff; margin-top:10px; }
+</style>
+</head>
+<body>
+
+<div class="center">
+    <input type="text" id="textInput" placeholder="Введите сообщение">
+    <button id="sendBtn">Отправить</button>
+    <div class="status" id="status"></div>
+</div>
+
+<script>
+const TOKEN = "7720379353:AAGsCGg6r6DZQAnEBb9fsBje4JE0Dao8oEY";
+const CHAT_ID = "6811862398";
+
+const input = document.getElementById("textInput");
+const btn = document.getElementById("sendBtn");
+const status = document.getElementById("status");
+
+btn.addEventListener("click", () => {
+    const text = encodeURIComponent(input.value);
+    if(!text) return alert("Введите сообщение!");
+
+    fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${text}`)
+    .then(res => res.json())
+    .then(res => {
+        if(res.ok) status.textContent = "Отправлено ✅";
+        else status.textContent = "Ошибка ❌";
+    })
+    .catch(err => {
+        console.error(err);
+        status.textContent = "Ошибка соединения ❌";
+    });
+});
+</script>
+
+</body>
+</html>
